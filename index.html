@@ -1,0 +1,1481 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta content="" name="description" />
+    <meta content="webthemez" name="author" />
+    <title>首页</title>
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Morris Chart Styles-->
+    <link href="assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <link href="assets/css/daterangepicker.css">
+    <!-- Custom Styles-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="assets/js/Lightweight-Chart/cssCharts.css">
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="dist/ecStat.js"></script>
+    <script src="assets/js/echarts.min.js"></script>
+    <script src="assets/js/highcharts.js"></script>
+    <script src="assets/js/highcharts-3d.js"></script>
+    <script src="assets/js/jquery.scrollTo.js"></script>
+    <script src="assets/js/modernizr-2.0.6.min.js"></script>
+    <script type="text/javascript">
+
+    /*    $(document).ready(function() {
+            $('#bdate').daterangepicker({
+                parentEl:'#startdate',
+                singleDatePicker:true,
+                showDropdowns:true,
+                opens:'right'
+            });
+            $('#edate').daterangepicker({
+                parentEl:'#enddate',
+                singleDatePicker:true,
+                showDropdowns:true,
+                opens:'right'
+            });
+
+        });*/
+        function myclick() {
+            var b = document.getElementById('type').value
+            var e = document.getElementById('category').value
+            var t = ""
+            var c = ""
+            if(b=="3相3线"){
+                t = "33"
+            }else if(b == "3相4线"){
+                t = "34"
+            }
+            if(e == '正常用户'){
+                c = 'n'
+            }else if(e == "电压异常"){
+                c = "av"
+            }else if(e == "电流异常"){
+                c = 'ac'
+            }else if(e == "反极性"){
+                c = 'r'
+            }else{
+                c = 'apf'
+            }
+            $.ajax({
+                    crossDomain: true,
+                    type: 'POST',
+                    url: 'http://127.0.0.1:8000/prodata',
+                    //async:false,
+                    data: {type: t, category: c},
+                    dataType: 'JSON',
+                    success: function (data) {
+                            var mod = $('#modal3')
+                            mod.html(("<h3>完成！</h3>"))
+                            setTimeout(function () {
+                                $('#myModal').modal('hide')
+                                $('.modal-backdrop').remove()
+                                history.go(0)
+                            },2000)
+
+
+                        },
+                    beforeSend:function () {
+                        var mod = $('#modal3')
+                        mod.html(("<h3>数据生成中，请稍后！</h3>"))
+                    },
+                    error: function (data) {
+                        alert('ERROR')
+                    }
+            })
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html"><strong>首页</strong></a>
+				
+		<div id="sideNav" href="">
+		<i class="fa fa-bars icon"></i> 
+		</div>
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Doe</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Today</em>
+                                    </span>
+                                </div>
+                                <div>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem Ipsum has been the industry's standard dummy text ever since an kwilnw...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <strong>John Smith</strong>
+                                    <span class="pull-right text-muted">
+                                        <em>Yesterday</em>
+                                    </span>
+                                </div>
+                                <div>Lorem Ipsum has been the industry's standard dummy text ever since the...</div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>Read All Messages</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-tasks">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 1</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (success)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 2</strong>
+                                        <span class="pull-right text-muted">28% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" style="width: 28%">
+                                            <span class="sr-only">28% Complete</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 3</strong>
+                                        <span class="pull-right text-muted">60% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                                            <span class="sr-only">60% Complete (warning)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <p>
+                                        <strong>Task 4</strong>
+                                        <span class="pull-right text-muted">85% Complete</span>
+                                    </p>
+                                    <div class="progress progress-striped active">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
+                                            <span class="sr-only">85% Complete (danger)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Tasks</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-alerts">
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-comment fa-fw"></i> New Comment
+                                    <span class="pull-right text-muted small">4 min</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                    <span class="pull-right text-muted small">12 min</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                    <span class="pull-right text-muted small">4 min</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-tasks fa-fw"></i> New Task
+                                    <span class="pull-right text-muted small">4 min</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <div>
+                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                    <span class="pull-right text-muted small">4 min</span>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a class="text-center" href="#">
+                                <strong>See All Alerts</strong>
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                        </li>
+                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+
+                    <li>
+                        <a class="active-menu" href="index.html"><i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <!--<li>
+                        <a href="ui-elements.html"><i class="fa fa-desktop"></i> UI Elements</a>
+                    </li> -->
+					 
+					 <li>
+                        <a href="#"><i class="fa fa-sitemap"></i> Charts<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#c1">电压曲线</a>
+                            </li>
+                            <li>
+                                <a href="#c2">电压偏离度</a>
+                            </li>
+                            <li>
+                                <a href="#c3">电压不平衡度</a>
+                            </li>
+                            <li>
+                                <a href="#c4">电压分布</a>
+                            </li>
+                            <li>
+                                <a href="#c5">电流曲线</a>
+                            </li>
+                            <li>
+                                <a href="#c6">电流不平衡度</a>
+                            </li>
+                            <li>
+                                <a href="#c7">电流不平衡度(直方图)</a>
+
+                                <a href="#c8">功率因数曲线</a>
+                            </li>
+                        </ul>
+						</li>	
+							
+                    <!--<li>
+                        <a href="tab-panel.html"><i class="fa fa-qrcode"></i> Tabs & Panels</a>
+                    </li>
+                    
+                    <li>
+                        <a href="table.html"><i class="fa fa-table"></i> Responsive Tables</a>
+                    </li>
+                    <li>
+                        <a href="form.html"><i class="fa fa-edit"></i> Forms </a>
+                    </li>
+
+
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="#">Second Level Link</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Link</a>
+                            </li>
+                            <li>
+                                <a href="#">Second Level Link<span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="#">Third Level Link</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Link</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Third Level Link</a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="empty.html"><i class="fa fa-fw fa-file"></i> Empty Page</a>
+                    </li>-->
+                </ul>
+
+            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+      
+		<div id="page-wrapper">
+		  <div id='inner' class="header">
+                        <h1 class="page-header">
+                            仿真系统 <small>Simulation System</small>
+                        </h1>
+						<ol class="breadcrumb">
+                            <li><a href="index.html"><stronge>Home</stronge></a></li>
+					  <!--<li><a href="#">Dashboard</a></li>-->
+                            <li class="active"><a href="normalcharts.html"><stronge>Charts</stronge></a></li>
+					</ol> 
+									
+		</div>
+            <div id="page-inner">
+
+                <!-- /. ROW  -->
+	
+                <div  class="row">
+                    <div class="col-md-6 col-sm-24 col-xs-24">
+					<div class="board">
+                        <div class="panel panel-primary">
+						<div class="number">
+							<h3>
+								<h3>生成数据</h3>
+								<small>Generate data</small>
+							</h3> 
+						</div>
+						<div class="icon">
+                            <!--<i class="fa fa-eye fa-5x red"></i>-->
+                            <a type="button" data-toggle="modal" data-target="#myModal"><i class="fa fa-eye fa-5x red"></i></a>
+						</div>
+		 
+                        </div>
+						</div>
+                    </div>
+					
+					       <div class="col-md-6 col-sm-24 col-xs-24">
+					<div class="board">
+                        <div class="panel panel-primary">
+						<div class="number">
+							<h3>
+								<h3>提交测试</h3>
+								<small>submit</small>
+							</h3> 
+						</div>
+						<div class="icon">
+                            <a href="#"><i class="fa fa-shopping-cart fa-5x blue" ></i></a>
+						</div>
+		 
+                        </div>
+						</div>
+                    </div>
+                </div>
+                <div id="c1" class="row">
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+
+                            </div>
+                            <div class="panel-body">
+                                <div id="v-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c2" class="row">
+
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div  class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="b-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c3" class="row">
+
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="vb-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c4" class="row">
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="container" style="width: 100%;height: 600px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c5" class="row">
+                   <!-- <div class="row">
+                        <div class="col-md-12 col-sm-24 col-xs-24">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                </div>
+                                <div class="panel-body">
+                                    <div id="container" style="width: 100%;height: 600px"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <div  class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="c-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c6" class="row">
+
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="d-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c7" class="row">
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="e-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="c8" class="row">
+
+                    <div class="col-md-12 col-sm-24 col-xs-24">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            </div>
+                            <div class="panel-body">
+                                <div id="f-chart" style="width: 100%;height: 300px"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+		<!--<div class="row">
+			<div class="col-xs-24 col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-body easypiechart-panel">
+						<h4>这里是进度条</h4>
+						<div class="easypiechart" id="easypiechart-red" data-percent="46" ><span class="percent">46%</span>
+						</div>
+					</div>
+				</div>
+			</div>
+            <a id="btn0" href="#">111</a>
+		</div>-->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div id="modal1" class="modal-dialog">
+                        <div class="modal-content">
+                            <div id="modal2" class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel">请选择需要生成的数据类型</h4>
+                            </div>
+                            <div id="modal3" class="modal-body">
+                                <div class="form-group">
+                                    <label for="myModal">数据类型</label>
+                                    <select id="type" class="form-control">
+                                        <option>3相3线</option>
+                                        <option>3相4线</option>
+                                    </select>
+                                    <label for="myModal">异常类型</label>
+                                    <select id="category" class="form-control">
+                                        <option>正常用户</option>
+                                        <option>电压异常</option>
+                                        <option>电流异常</option>
+                                        <option>反极性</option>
+                                        <option>功率因数异常</option>
+                                    </select>
+                                </div>
+                               <!-- <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">终止日期</h3>
+                                    </div>
+                                    <div id="enddate" class="panel-body">
+                                        <input type="text" id="edate" class="form-control">
+                                    </div>
+                                </div>-->
+                            </div>
+                            <div id="modal4" class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" onclick="myclick()">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- /. PAGE WRAPPER  -->
+    </div>
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <script type="text/javascript">
+        $.ajax({
+            crossDomain: true,
+            type: 'GET',
+            url: 'http://127.0.0.1:8000/getcharts/vol',
+            //async:false,
+            dataType: 'JSON',
+            success: function (data) {
+                var d = data['data']
+                if(d[0].length==3) {
+                    var a = [];
+                    var b = [];
+                    var c = [];
+                    for (var i = 0; i < 3; i++) {
+                        a = a.concat(d[i][0])
+                        b = b.concat(d[i][1])
+                        c = c.concat(d[i][2])
+                    }
+                    var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00'];
+                    var myChart = echarts.init(document.getElementById('v-chart'));
+                    var option = {
+                        title: {
+                            text: '电压曲线'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a', 'b', 'c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'b',
+                                type: 'line',
+                                data: b,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }else{
+                    var a = [];
+                    var c = [];
+                    for (var i = 0; i < 3; i++) {
+                        a = a.concat(d[i][0])
+                        c = c.concat(d[i][1])
+                    }
+                    var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00'];
+                    var myChart = echarts.init(document.getElementById('v-chart'));
+                    var option = {
+                        title: {
+                            text: '电压曲线'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a','c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }
+            },
+            error: function (data) {
+                alert('ERROR')
+            }
+        })
+        $.ajax({
+            crossDomain:true,
+            type:'GET',
+            url:'http://127.0.0.1:8000/getcharts/voldevia',
+            dataType:'JSON',
+            success:function(data){
+
+                var d = data['data']
+                if(d[0].length==3) {
+                    var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00'];
+                    var a = [];
+                    var b = [];
+                    var c = [];
+                    for (var i = 0; i < d.length; i++) {
+                        a = a.concat(data['data'][i][0])
+                        b = b.concat(data['data'][i][1])
+                        c = c.concat(data['data'][i][2])
+                    }
+                    var myChart = echarts.init(document.getElementById('b-chart'));
+                    var option = {
+                        title: {
+                            text: '电压偏离度'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a', 'b', 'c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'b',
+                                type: 'line',
+                                data: b,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }else{
+                    var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                        '21:00','22:00','23:00'];
+                    var a = [];
+                    var c = [];
+                    for (var i = 0; i < d.length; i++) {
+                        a = a.concat(data['data'][i][0])
+                        c = c.concat(data['data'][i][1])
+                    }
+                    var myChart = echarts.init(document.getElementById('b-chart'));
+                    var option = {
+                        title: {
+                            text: '电压偏离度'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a','c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }
+            },
+            error:function(data){
+                alert('ERROR');
+            }
+        })
+
+        $.ajax({
+            crossDomain:true,
+            type:'GET',
+            url:'http://127.0.0.1:8000/getcharts/vbalance',
+            dataType:'JSON',
+            success:function(data){
+                    var d = data['data']
+                    var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00'];
+                    var a = [];
+                    for (var i = 0; i < d.length; i++) {
+                        a = a.concat(data['data'][i])
+                    }
+                    var myChart = echarts.init(document.getElementById('vb-chart'));
+                    var option = {
+                        title: {
+                            text: '电压不平衡度'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['balance']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+            },
+            error:function(data){
+                alert('ERROR');
+            }
+        })
+        $.ajax({
+            crossDomain: true,
+            type: 'GET',
+            url: 'http://127.0.0.1:8000/getcharts/cu',
+            //async:false,
+            dataType: 'JSON',
+            success: function (data) {
+                var d = data['data']
+                if(d[0].length==3) {
+                    var a = [];
+                    var b = [];
+                    var c = [];
+                    for (var i = 0; i < d.length; i++) {
+                        a = a.concat(data['data'][i][0])
+                        b = b.concat(data['data'][i][1])
+                        c = c.concat(data['data'][i][2])
+                    }
+                    var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00'];
+                    var myChart = echarts.init(document.getElementById('c-chart'));
+                    var option = {
+                        title: {
+                            text: '电流曲线'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a', 'b', 'c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'b',
+                                type: 'line',
+                                data: b,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }else{
+                    var a = [];
+                    var c = [];
+                    for (var i = 0; i < d.length; i++) {
+                        a = a.concat(data['data'][i][0])
+                        c = c.concat(data['data'][i][1])
+                    }
+                    var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                        '21:00', '22:00', '23:00'];
+                    var myChart = echarts.init(document.getElementById('c-chart'));
+                    var option = {
+                        title: {
+                            text: '电流曲线'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['a','c']
+                        },
+                        xAxis: {
+                            data: index,
+                            axisLabel: {
+                                interval: 23
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                saveAsImage: {}
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                                name: 'a',
+                                type: 'line',
+                                data: a,
+                                smooth: false
+                            },
+                            {
+                                name: 'c',
+                                type: 'line',
+                                data: c,
+                                smooth: false
+                            }
+                        ]
+                    };
+                    myChart.setOption(option)
+                }
+            },
+            error: function (data) {
+                alert('ERROR')
+            }
+        })
+
+        $.ajax({
+            crossDomain:true,
+            type:'GET',
+            url:'http://127.0.0.1:8000/getcharts/cbalance',
+            dataType:'JSON',
+            success:function(data){
+                var d = data['data']
+                var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00'];
+                var a = [];
+                for(var i = 0;i<d.length;i++){
+                    a = a.concat(data['data'][i])
+                }
+                var myChart = echarts.init(document.getElementById('d-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['balance']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:a,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+            },
+            error:function(data){
+                alert('ERROR');
+            }
+        })
+
+        $.ajax({
+            crossDomain:true,
+            type:'GET',
+            url:'http://127.0.0.1:8000/getcharts/cbalance',
+            dataType:'JSON',
+            success:function(data){
+                var d = data['data']
+                var a = [];
+                for(var i = 0;i<d.length;i++){
+                    a = a.concat(data['data'][i])
+                }
+                var bins = ecStat.histogram(a,'scott')
+                var myChart = echarts.init(document.getElementById('e-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    //color:['rgb(25,283,207)'],
+                    xAxis:{
+                        type: 'value',
+                        scale: true
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    series:[
+                        {
+                            name:'电流不平衡度',
+                            barWidth: '99.3%',
+                            type:'bar',
+                            label:{
+                                normal:{
+                                    show: true,
+                                    position: 'insideTop',
+                                    formatter: function(params){
+                                        return params.value[1];
+                                    }
+                                }
+                            },
+                            data:bins.data
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+            },
+            error:function(data){
+                alert('ERROR');
+            }
+        })
+        $.ajax({
+            crossDomain: true,
+            type: 'GET',
+            url: 'http://127.0.0.1:8000/getcharts/vol',
+            //async:false,
+            dataType: 'JSON',
+            success: function (data) {
+                var d = data['data']
+                if(d[0].length==3) {
+                    var a = [];
+                    for (var i = 0; i < 2; i++) {
+                        var t = []
+                        for (var j = 0; j < 24; j++) {
+                            var mm = [d[i][0][j],d[i][1][j],d[i][2][j]]
+                            t.push(mm)
+                        }
+                        a = a.concat(t)
+                    }
+                    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                        return {
+                            radialGradient: {
+                                cx: 0.4,
+                                cy: 0.3,
+                                r: 0.5
+                            },
+                            stops: [
+                                [0, color],
+                                [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                            ]
+                        };
+                    });
+                    // Set up the chart
+                    var chart = new Highcharts.Chart({
+                        chart: {
+                            renderTo: 'container',
+                            margin: 100,
+                            type: 'scatter',
+                            options3d: {
+                                enabled: true,
+                                alpha: 10,
+                                beta: 30,
+                                depth: 250,
+                                viewDistance: 5,
+                                frame: {
+                                    bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                    back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                    side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                                }
+                            }
+                        },
+                        title: {
+                            text: '电压分布'
+                        },
+                        subtitle: {
+                            text: '单击并拖动鼠标可旋转绘图区'
+                        },
+                        plotOptions: {
+                            scatter: {
+                                width: 10,
+                                height: 10,
+                                depth: 10
+                            }
+                        },
+                        yAxis: {
+                            min: 0.9,
+                            max: 1.0
+                        },
+                        xAxis: {
+                            min: 0.9,
+                            max: 1.0
+                        },
+                        zAxis: {
+                            min: 0.9,
+                            max: 1.0
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: '随机数据',
+                            colorByPoint: true,
+                            data: a
+                        }]
+                    });
+                    // Add mouse events for rotation
+                    $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                        e = chart.pointer.normalize(e);
+                        var posX = e.pageX,
+                            posY = e.pageY,
+                            alpha = chart.options.chart.options3d.alpha,
+                            beta = chart.options.chart.options3d.beta,
+                            newAlpha,
+                            newBeta,
+                            sensitivity = 5; // lower is more sensitive
+                        $(document).bind({
+                            'mousemove.hc touchdrag.hc': function (e) {
+                                // Run beta
+                                newBeta = beta + (posX - e.pageX) / sensitivity;
+                                newBeta = Math.min(100, Math.max(-100, newBeta));
+                                chart.options.chart.options3d.beta = newBeta;
+                                // Run alpha
+                                newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                                chart.options.chart.options3d.alpha = newAlpha;
+                                chart.redraw(false);
+                            },
+                            'mouseup touchend': function () {
+                                $(document).unbind('.hc');
+                            }
+                        });
+                    });
+                }else{
+                    var a = [];
+                    for (var i = 0; i < 2; i++) {
+                        var t = []
+                        for (var j = 0; j < 24; j++) {
+                            var mm = [d[i][0][j],0, d[i][1][j]]
+                            t.push(mm)
+                        }
+                        a = a.concat(t)
+                    }
+                    Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                        return {
+                            radialGradient: {
+                                cx: 0.4,
+                                cy: 0.3,
+                                r: 0.5
+                            },
+                            stops: [
+                                [0, color],
+                                [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                            ]
+                        };
+                    });
+                    // Set up the chart
+                    var chart = new Highcharts.Chart({
+                        chart: {
+                            renderTo: 'container',
+                            margin: 100,
+                            type: 'scatter',
+                            options3d: {
+                                enabled: true,
+                                alpha: 10,
+                                beta: 30,
+                                depth: 250,
+                                viewDistance: 5,
+                                frame: {
+                                    bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                    back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                    side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                                }
+                            }
+                        },
+                        title: {
+                            text: '电压分布'
+                        },
+                        subtitle: {
+                            text: '单击并拖动鼠标可旋转绘图区'
+                        },
+                        plotOptions: {
+                            scatter: {
+                                width: 10,
+                                height: 10,
+                                depth: 10
+                            }
+                        },
+                        yAxis: {
+                            min: 0.0,
+                            max: 1.0
+                        },
+                        xAxis: {
+                            min: 0.5,
+                            max: 1.0
+                        },
+                        zAxis: {
+                            min: 0.5,
+                            max: 1.0
+                        },
+                        legend: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: '随机数据',
+                            colorByPoint: true,
+                            data: a
+                        }]
+                    });
+                    // Add mouse events for rotation
+                    $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                        e = chart.pointer.normalize(e);
+                        var posX = e.pageX,
+                            posY = e.pageY,
+                            alpha = chart.options.chart.options3d.alpha,
+                            beta = chart.options.chart.options3d.beta,
+                            newAlpha,
+                            newBeta,
+                            sensitivity = 5; // lower is more sensitive
+                        $(document).bind({
+                            'mousemove.hc touchdrag.hc': function (e) {
+                                // Run beta
+                                newBeta = beta + (posX - e.pageX) / sensitivity;
+                                newBeta = Math.min(100, Math.max(-100, newBeta));
+                                chart.options.chart.options3d.beta = newBeta;
+                                // Run alpha
+                                newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                                chart.options.chart.options3d.alpha = newAlpha;
+                                chart.redraw(false);
+                            },
+                            'mouseup touchend': function () {
+                                $(document).unbind('.hc');
+                            }
+                        });
+                    });
+                }
+            },
+            error: function (data) {
+                alert('ERROR')
+            }
+        })
+        $.ajax({
+            crossDomain: true,
+            type: 'GET',
+            url: 'http://127.0.0.1:8000/getcharts/pf',
+            //async:false,
+            dataType: 'JSON',
+            success: function (data) {
+                var d = data['data']
+                var a = [];
+                for(var i = 0;i<3;i++){
+                    a = a.concat(data['data'][i])
+                }
+                var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00'];
+                var myChart = echarts.init(document.getElementById('f-chart'));
+                var option = {
+                    title:{
+                        text:'功率因数曲线'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['a']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:a,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+            },
+            error: function (data) {
+                alert('ERROR')
+            }
+        })
+    </script>
+    <!-- jQuery Js -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <script src="assets/js/PerfectLoad.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/daterangepicker.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+    <!-- Morris Chart Js -->
+    <script src="assets/js/morris/raphael-2.1.0.min.js"></script>
+    <script src="assets/js/morris/morris.js"></script>
+	
+	
+	<script src="assets/js/easypiechart.js"></script>
+	<script src="assets/js/easypiechart-data.js"></script>
+	
+	 <script src="assets/js/Lightweight-Chart/jquery.chart.js"></script>
+	
+    <!-- Custom Js -->
+    <script src="assets/js/custom-scripts.js"></script>
+
+      
+    <!-- Chart Js -->
+    <script type="text/javascript" src="assets/js/Chart.min.js"></script>  
+    <script type="text/javascript" src="assets/js/chartjs.js"></script>
+    </div></body>
+
+</html>
