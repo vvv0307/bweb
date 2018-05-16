@@ -30,22 +30,900 @@
     <script src="assets/js/jquery.scrollTo.js"></script>
     <script src="assets/js/modernizr-2.0.6.min.js"></script>
     <script type="text/javascript">
-
-    /*    $(document).ready(function() {
-            $('#bdate').daterangepicker({
-                parentEl:'#startdate',
-                singleDatePicker:true,
-                showDropdowns:true,
-                opens:'right'
-            });
-            $('#edate').daterangepicker({
-                parentEl:'#enddate',
-                singleDatePicker:true,
-                showDropdowns:true,
-                opens:'right'
-            });
-
-        });*/
+        function myclick1() {
+            if(localStorage['type']=='' && localStorage['category']==''){
+                var mod = $('#testinfo')
+                mod.html(("没有数据请生成后再尝试!"))
+                setTimeout(function () {
+                    $('#myModal1').modal('hide')
+                    $('.modal-backdrop').remove()
+                    history.go()
+                },2000)
+            }else{
+                var ty = localStorage['type']
+                var ca = localStorage['category']
+                var na = localStorage['name']
+                alert(na)
+                $.ajax({
+                    crossDomain: true,
+                    type: 'POST',
+                    url: 'http://127.0.0.1:8000/submit',
+                    //async:false,
+                    data: {type: ty, category: ca,name: na},
+                    dataType: 'JSON',
+                    beforeSend:function () {
+                        var mod = $('#testinfo')
+                        mod.html(("正在测试，请稍后..."))
+                    },
+                    success: function (data){
+                        if(data['status']=='YES') {
+                            var mod = $('#testinfo')
+                            mod.html(("数据生成正确"))
+                            setTimeout(function () {
+                                $('#myModal1').modal('hide')
+                                $('.modal-backdrop').remove()
+                                history.go()
+                            }, 2000)
+                        }else if(data['status']=='NO'){
+                            var mod = $('#testinfo')
+                            mod.html(("数据生成错误"))
+                            setTimeout(function () {
+                                $('#myModal1').modal('hide')
+                                $('.modal-backdrop').remove()
+                                history.go()
+                            }, 2000)
+                        }
+                    },
+                    error:function(data){
+                        alert('ERROR')
+                    }
+                })
+            }
+        }
+        $(document).ready(function () {
+            var d = JSON.parse(localStorage["data"])
+            if(d.length==24) {
+                var a = [];
+                var b = [];
+                var c = [];
+                a = a.concat(d[0]).concat(d[3]).concat(d[6])
+                b = b.concat(d[1]).concat(d[4]).concat(d[7])
+                c = c.concat(d[2]).concat(d[5]).concat(d[8])
+                var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00'];
+                var myChart = echarts.init(document.getElementById('v-chart'));
+                var option = {
+                    title: {
+                        text: '电压曲线'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a', 'b', 'c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: a,
+                            smooth: false
+                        },
+                        {
+                            name: 'b',
+                            type: 'line',
+                            data: b,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: c,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var d1 = [];
+                var e = [];
+                var f = [];
+                for(var i = 0;i<a.length;i++){
+                    d1[i] = Math.abs(a[i]-1)
+                }
+                for(var i = 0;i<b.length;i++){
+                    e[i] = Math.abs(b[i]-1)
+                }
+                for(var i = 0;i<b.length;i++){
+                    f[i] = Math.abs(c[i]-1)
+                }
+                var myChart = echarts.init(document.getElementById('b-chart'));
+                var option1 = {
+                    title: {
+                        text: '电压偏离度'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a', 'b', 'c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: d1,
+                            smooth: false
+                        },
+                        {
+                            name: 'b',
+                            type: 'line',
+                            data: e,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: f,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option1)
+                var vb = [];
+                for (var i = 0; i < a.length; i++) {
+                    vb[i] = (Math.max(a[i],b[i],c[i])-Math.min(a[i],b[i],c[i]))/Math.max(a[i],b[i],c[i])
+                }
+                var myChart = echarts.init(document.getElementById('vb-chart'));
+                var option2 = {
+                    title: {
+                        text: '电压不平衡度'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['balance']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: vb,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option2)
+                var ca = [];
+                var cb = [];
+                var cc = [];
+                ca = d[9].concat(d[12]).concat(d[15])
+                cb = d[10].concat(d[13]).concat(d[16])
+                cc = d[11].concat(d[14]).concat(d[17])
+                var myChart = echarts.init(document.getElementById('c-chart'));
+                var option = {
+                    title: {
+                        text: '电流曲线'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a', 'b', 'c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: ca,
+                            smooth: false
+                        },
+                        {
+                            name: 'b',
+                            type: 'line',
+                            data: cb,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: cc,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var cba = [];
+                for(var i = 0;i<ca.length;i++){
+                    cba[i] = (Math.max(ca[i],cb[i],cc[i])-Math.min(ca[i],cb[i],cc[i]))/Math.max(ca[i],cb[i],cc[i])
+                }
+                var myChart = echarts.init(document.getElementById('d-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['balance']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:cba,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var bins = ecStat.histogram(cba,'scott')
+                var myChart = echarts.init(document.getElementById('e-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    //color:['rgb(25,283,207)'],
+                    xAxis:{
+                        type: 'value',
+                        scale: true
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    series:[
+                        {
+                            name:'电流不平衡度',
+                            barWidth: '99.3%',
+                            type:'bar',
+                            label:{
+                                normal:{
+                                    show: true,
+                                    position: 'insideTop',
+                                    formatter: function(params){
+                                        return params.value[1];
+                                    }
+                                }
+                            },
+                            data:bins.data
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var pf = [];
+                pf = d[21].concat(d[22]).concat(d[23])
+                var myChart = echarts.init(document.getElementById('f-chart'));
+                var option = {
+                    title:{
+                        text:'功率因数曲线'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['a']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:pf,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var vf = [];
+                var t = []
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[0][j],d[1][j], d[2][j]]
+                    t.push(mm)
+                }
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[3][j],d[4][j],d[5][j]]
+                    t.push(mm)
+                }
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[6][j],d[7][j],d[8][j]]
+                    t.push(mm)
+                }
+                vf =vf .concat(t)
+                Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                    return {
+                        radialGradient: {
+                            cx: 0.4,
+                            cy: 0.3,
+                            r: 0.5
+                        },
+                        stops: [
+                            [0, color],
+                            [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                        ]
+                    };
+                });
+                // Set up the chart
+                var chart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'container',
+                        margin: 100,
+                        type: 'scatter',
+                        options3d: {
+                            enabled: true,
+                            alpha: 10,
+                            beta: 30,
+                            depth: 250,
+                            viewDistance: 5,
+                            frame: {
+                                bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                            }
+                        }
+                    },
+                    title: {
+                        text: '电压分布'
+                    },
+                    subtitle: {
+                        text: '单击并拖动鼠标可旋转绘图区'
+                    },
+                    plotOptions: {
+                        scatter: {
+                            width: 10,
+                            height: 10,
+                            depth: 10
+                        }
+                    },
+                    yAxis: {
+                        min: 0.0,
+                        max: 1.0
+                    },
+                    xAxis: {
+                        min: 0.8,
+                        max: 1.0
+                    },
+                    zAxis: {
+                        min: 0.8,
+                        max: 1.0
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: '随机数据',
+                        colorByPoint: true,
+                        data: vf
+                    }]
+                });
+                // Add mouse events for rotation
+                $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                    e = chart.pointer.normalize(e);
+                    var posX = e.pageX,
+                        posY = e.pageY,
+                        alpha = chart.options.chart.options3d.alpha,
+                        beta = chart.options.chart.options3d.beta,
+                        newAlpha,
+                        newBeta,
+                        sensitivity = 5; // lower is more sensitive
+                    $(document).bind({
+                        'mousemove.hc touchdrag.hc': function (e) {
+                            // Run beta
+                            newBeta = beta + (posX - e.pageX) / sensitivity;
+                            newBeta = Math.min(100, Math.max(-100, newBeta));
+                            chart.options.chart.options3d.beta = newBeta;
+                            // Run alpha
+                            newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                            newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                            chart.options.chart.options3d.alpha = newAlpha;
+                            chart.redraw(false);
+                        },
+                        'mouseup touchend': function () {
+                            $(document).unbind('.hc');
+                        }
+                    });
+                });
+            }else{
+                var a = [];
+                var c = [];
+                a = a.concat(d[0]).concat(d[2]).concat(d[4])
+                c = c.concat(d[1]).concat(d[3]).concat(d[5])
+                var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                    '21:00','22:00','23:00'];
+                var myChart = echarts.init(document.getElementById('v-chart'));
+                var option = {
+                    title: {
+                        text: '电压曲线'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a','c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: a,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: c,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var d1 = [];
+                var e = [];
+                for(var i = 0;i<a.length;i++){
+                    d1[i] = Math.abs(a[i]-1)
+                }
+                for(var i = 0;i<c.length;i++){
+                    e[i] = Math.abs(c[i]-1)
+                }
+                var myChart = echarts.init(document.getElementById('b-chart'));
+                var option1 = {
+                    title: {
+                        text: '电压偏离度'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a','c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: d1,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: e,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option1)
+                var vb = [];
+                for (var i = 0; i < a.length; i++) {
+                    vb[i] = (Math.max(a[i],c[i])-Math.min(a[i],c[i]))/Math.max(a[i],c[i])
+                }
+                var myChart = echarts.init(document.getElementById('vb-chart'));
+                var option2 = {
+                    title: {
+                        text: '电压不平衡度'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['balance']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: vb,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option2)
+                var ca1 = [];
+                var cc1 = [];
+                ca1 = d[6].concat(d[8]).concat(d[10])
+                cc1 = d[7].concat(d[9]).concat(d[11])
+                var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                    '21:00', '22:00', '23:00'];
+                var myChart = echarts.init(document.getElementById('c-chart'));
+                var option = {
+                    title: {
+                        text: '电流曲线'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['a','c']
+                    },
+                    xAxis: {
+                        data: index,
+                        axisLabel: {
+                            interval: 23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: 'a',
+                            type: 'line',
+                            data: ca1,
+                            smooth: false
+                        },
+                        {
+                            name: 'c',
+                            type: 'line',
+                            data: cc1,
+                            smooth: false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var cba = [];
+                for(var i = 0;i<ca1.length;i++){
+                    cba[i] = (Math.max(ca1[i],cc1[i])-Math.min(ca1[i],cc1[i]))/Math.max(ca1[i],cc1[i])
+                }
+                var myChart = echarts.init(document.getElementById('d-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['balance']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:cba,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var bins = ecStat.histogram(cba,'scott')
+                var myChart = echarts.init(document.getElementById('e-chart'));
+                var option = {
+                    title:{
+                        text:'电流不平衡度'
+                    },
+                    //color:['rgb(25,283,207)'],
+                    xAxis:{
+                        type: 'value',
+                        scale: true
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    series:[
+                        {
+                            name:'电流不平衡度',
+                            barWidth: '99.3%',
+                            type:'bar',
+                            label:{
+                                normal:{
+                                    show: true,
+                                    position: 'insideTop',
+                                    formatter: function(params){
+                                        return params.value[1];
+                                    }
+                                }
+                            },
+                            data:bins.data
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var pf = [];
+                pf = d[15].concat(d[16]).concat(d[17])
+                var myChart = echarts.init(document.getElementById('f-chart'));
+                var option = {
+                    title:{
+                        text:'功率因数曲线'
+                    },
+                    tooltip:{
+                        trigger:'axis'
+                    },
+                    legend:{
+                        data:['a']
+                    },
+                    xAxis:{
+                        data:index,
+                        axisLabel:{
+                            interval:23
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    yAxis:{
+                        type: 'value'
+                    },
+                    series:[
+                        {
+                            name:'a',
+                            type:'line',
+                            data:pf,
+                            smooth:false
+                        }
+                    ]
+                };
+                myChart.setOption(option)
+                var vf = [];
+                var t = []
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[0][j],0, d[1][j]]
+                    t.push(mm)
+                }
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[2][j],0, d[3][j]]
+                    t.push(mm)
+                }
+                for (var j = 0; j < 24; j++) {
+                    var mm = [d[4][j],0,d[5][j]]
+                    t.push(mm)
+                }
+                vf =vf .concat(t)
+                Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                    return {
+                        radialGradient: {
+                            cx: 0.4,
+                            cy: 0.3,
+                            r: 0.5
+                        },
+                        stops: [
+                            [0, color],
+                            [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                        ]
+                    };
+                });
+                // Set up the chart
+                var chart = new Highcharts.Chart({
+                    chart: {
+                        renderTo: 'container',
+                        margin: 100,
+                        type: 'scatter',
+                        options3d: {
+                            enabled: true,
+                            alpha: 10,
+                            beta: 30,
+                            depth: 250,
+                            viewDistance: 5,
+                            frame: {
+                                bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                            }
+                        }
+                    },
+                    title: {
+                        text: '电压分布'
+                    },
+                    subtitle: {
+                        text: '单击并拖动鼠标可旋转绘图区'
+                    },
+                    plotOptions: {
+                        scatter: {
+                            width: 10,
+                            height: 10,
+                            depth: 10
+                        }
+                    },
+                    yAxis: {
+                        min: 0.0,
+                        max: 1.0
+                    },
+                    xAxis: {
+                        min: 0.8,
+                        max: 1.0
+                    },
+                    zAxis: {
+                        min: 0.8,
+                        max: 1.0
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: '随机数据',
+                        colorByPoint: true,
+                        data: vf
+                    }]
+                });
+                // Add mouse events for rotation
+                $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                    e = chart.pointer.normalize(e);
+                    var posX = e.pageX,
+                        posY = e.pageY,
+                        alpha = chart.options.chart.options3d.alpha,
+                        beta = chart.options.chart.options3d.beta,
+                        newAlpha,
+                        newBeta,
+                        sensitivity = 5; // lower is more sensitive
+                    $(document).bind({
+                        'mousemove.hc touchdrag.hc': function (e) {
+                            // Run beta
+                            newBeta = beta + (posX - e.pageX) / sensitivity;
+                            newBeta = Math.min(100, Math.max(-100, newBeta));
+                            chart.options.chart.options3d.beta = newBeta;
+                            // Run alpha
+                            newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                            newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                            chart.options.chart.options3d.alpha = newAlpha;
+                            chart.redraw(false);
+                        },
+                        'mouseup touchend': function () {
+                            $(document).unbind('.hc');
+                        }
+                    });
+                });
+            }
+        })
         function myclick() {
             var b = document.getElementById('type').value
             var e = document.getElementById('category').value
@@ -53,8 +931,10 @@
             var c = ""
             if(b=="3相3线"){
                 t = "33"
+                localStorage['type'] = '33gg'
             }else if(b == "3相4线"){
                 t = "34"
+                localStorage['type'] = '34gd'
             }
             if(e == '正常用户'){
                 c = 'n'
@@ -67,10 +947,16 @@
             }else{
                 c = 'apf'
             }
+            if(c!='n'){
+                localStorage['category'] = '1'
+            }else{
+                localStorage['category'] = '0'
+            }
+
             $.ajax({
                     crossDomain: true,
                     type: 'POST',
-                    url: 'http://123.206.125.42:8000/prodata',
+                    url: 'http://127.0.0.1:8000/prodata',
                     //async:false,
                     data: {type: t, category: c},
                     dataType: 'JSON',
@@ -80,10 +966,854 @@
                             setTimeout(function () {
                                 $('#myModal').modal('hide')
                                 $('.modal-backdrop').remove()
-                                history.go(0)
+                                history.go()
                             },2000)
 
-
+                        var d = data['data']
+                        /*localStorage.clear()*/
+                        /*localStorage["data"] = JSON.stringify(d)*/
+                        localStorage['name'] = data['name']
+                        if(d.length==24) {
+                            var a = [];
+                            var b = [];
+                            var c = [];
+                            a = a.concat(d[0]).concat(d[3]).concat(d[6])
+                            b = b.concat(d[1]).concat(d[4]).concat(d[7])
+                            c = c.concat(d[2]).concat(d[5]).concat(d[8])
+                            var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00'];
+                            var myChart = echarts.init(document.getElementById('v-chart'));
+                            var option = {
+                                title: {
+                                    text: '电压曲线'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a', 'b', 'c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: a,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'b',
+                                        type: 'line',
+                                        data: b,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: c,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option,true)
+                            var d1 = [];
+                            var e = [];
+                            var f = [];
+                            for(var i = 0;i<a.length;i++){
+                                d1[i] = Math.abs(a[i]-1)
+                            }
+                            for(var i = 0;i<b.length;i++){
+                                e[i] = Math.abs(b[i]-1)
+                            }
+                            for(var i = 0;i<b.length;i++){
+                                f[i] = Math.abs(c[i]-1)
+                            }
+                            var myChart1 = echarts.init(document.getElementById('b-chart'));
+                            var option1 = {
+                                title: {
+                                    text: '电压偏离度'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a', 'b', 'c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: d1,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'b',
+                                        type: 'line',
+                                        data: e,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: f,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart1.setOption(option1)
+                            var vb = [];
+                            for (var i = 0; i < a.length; i++) {
+                                vb[i] = (Math.max(a[i],b[i],c[i])-Math.min(a[i],b[i],c[i]))/Math.max(a[i],b[i],c[i])
+                            }
+                            var myChart = echarts.init(document.getElementById('vb-chart'));
+                            var option2 = {
+                                title: {
+                                    text: '电压不平衡度'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['balance']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: vb,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option2)
+                            var ca = [];
+                            var cb = [];
+                            var cc = [];
+                            ca = d[9].concat(d[12]).concat(d[15])
+                            cb = d[10].concat(d[13]).concat(d[16])
+                            cc = d[11].concat(d[14]).concat(d[17])
+                            var myChart = echarts.init(document.getElementById('c-chart'));
+                            var option = {
+                                title: {
+                                    text: '电流曲线'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a', 'b', 'c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: ca,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'b',
+                                        type: 'line',
+                                        data: cb,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: cc,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var cba = [];
+                            for(var i = 0;i<ca.length;i++){
+                                cba[i] = (Math.max(ca[i],cb[i],cc[i])-Math.min(ca[i],cb[i],cc[i]))/Math.max(ca[i],cb[i],cc[i])
+                            }
+                            var myChart = echarts.init(document.getElementById('d-chart'));
+                            var option = {
+                                title:{
+                                    text:'电流不平衡度'
+                                },
+                                tooltip:{
+                                    trigger:'axis'
+                                },
+                                legend:{
+                                    data:['balance']
+                                },
+                                xAxis:{
+                                    data:index,
+                                    axisLabel:{
+                                        interval:23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                series:[
+                                    {
+                                        name:'a',
+                                        type:'line',
+                                        data:cba,
+                                        smooth:false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var bins = ecStat.histogram(cba,'scott')
+                            var myChart = echarts.init(document.getElementById('e-chart'));
+                            var option = {
+                                title:{
+                                    text:'电流不平衡度'
+                                },
+                                //color:['rgb(25,283,207)'],
+                                xAxis:{
+                                    type: 'value',
+                                    scale: true
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                series:[
+                                    {
+                                        name:'电流不平衡度',
+                                        barWidth: '99.3%',
+                                        type:'bar',
+                                        label:{
+                                            normal:{
+                                                show: true,
+                                                position: 'insideTop',
+                                                formatter: function(params){
+                                                    return params.value[1];
+                                                }
+                                            }
+                                        },
+                                        data:bins.data
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var pf = [];
+                            pf = d[21].concat(d[22]).concat(d[23])
+                            var myChart = echarts.init(document.getElementById('f-chart'));
+                            var option = {
+                                title:{
+                                    text:'功率因数曲线'
+                                },
+                                tooltip:{
+                                    trigger:'axis'
+                                },
+                                legend:{
+                                    data:['a']
+                                },
+                                xAxis:{
+                                    data:index,
+                                    axisLabel:{
+                                        interval:23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                series:[
+                                    {
+                                        name:'a',
+                                        type:'line',
+                                        data:pf,
+                                        smooth:false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var vf = [];
+                            var t = []
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[0][j], d[1][j], d[2][j]]
+                                t.push(mm)
+                            }
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[3][j], d[4][j], d[5][j]]
+                                t.push(mm)
+                            }
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[6][j], d[7][j], d[8][j]]
+                                t.push(mm)
+                            }
+                            vf =vf .concat(t)
+                            Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                                return {
+                                    radialGradient: {
+                                        cx: 0.4,
+                                        cy: 0.3,
+                                        r: 0.5
+                                    },
+                                    stops: [
+                                        [0, color],
+                                        [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                                    ]
+                                };
+                            });
+                            // Set up the chart
+                            var chart = new Highcharts.Chart({
+                                chart: {
+                                    renderTo: 'container',
+                                    margin: 100,
+                                    type: 'scatter',
+                                    options3d: {
+                                        enabled: true,
+                                        alpha: 10,
+                                        beta: 30,
+                                        depth: 250,
+                                        viewDistance: 5,
+                                        frame: {
+                                            bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                            back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                            side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                                        }
+                                    }
+                                },
+                                title: {
+                                    text: '电压分布'
+                                },
+                                subtitle: {
+                                    text: '单击并拖动鼠标可旋转绘图区'
+                                },
+                                plotOptions: {
+                                    scatter: {
+                                        width: 10,
+                                        height: 10,
+                                        depth: 10
+                                    }
+                                },
+                                yAxis: {
+                                    min: 0.8,
+                                    max: 1.0
+                                },
+                                xAxis: {
+                                    min: 0.8,
+                                    max: 1.0
+                                },
+                                zAxis: {
+                                    min: 0.8,
+                                    max: 1.0
+                                },
+                                legend: {
+                                    enabled: false
+                                },
+                                series: [{
+                                    name: '随机数据',
+                                    colorByPoint: true,
+                                    data: vf
+                                }]
+                            });
+                            // Add mouse events for rotation
+                            $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                                e = chart.pointer.normalize(e);
+                                var posX = e.pageX,
+                                    posY = e.pageY,
+                                    alpha = chart.options.chart.options3d.alpha,
+                                    beta = chart.options.chart.options3d.beta,
+                                    newAlpha,
+                                    newBeta,
+                                    sensitivity = 5; // lower is more sensitive
+                                $(document).bind({
+                                    'mousemove.hc touchdrag.hc': function (e) {
+                                        // Run beta
+                                        newBeta = beta + (posX - e.pageX) / sensitivity;
+                                        newBeta = Math.min(100, Math.max(-100, newBeta));
+                                        chart.options.chart.options3d.beta = newBeta;
+                                        // Run alpha
+                                        newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                        newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                                        chart.options.chart.options3d.alpha = newAlpha;
+                                        chart.redraw(false);
+                                    },
+                                    'mouseup touchend': function () {
+                                        $(document).unbind('.hc');
+                                    }
+                                });
+                            });
+                        }else{
+                            var a = [];
+                            var c = [];
+                            a = a.concat(d[0]).concat(d[2]).concat(d[4])
+                            c = c.concat(d[1]).concat(d[3]).concat(d[5])
+                            var index = ['第一天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00','第二天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00','第三天','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00',
+                                '21:00','22:00','23:00'];
+                            var myChart = echarts.init(document.getElementById('v-chart'));
+                            var option = {
+                                title: {
+                                    text: '电压曲线'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a','c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: a,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: c,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option,true)
+                            var d1 = [];
+                            var e = [];
+                            for(var i = 0;i<a.length;i++){
+                                d1[i] = Math.abs(a[i]-1)
+                            }
+                            for(var i = 0;i<c.length;i++){
+                                e[i] = Math.abs(c[i]-1)
+                            }
+                            var myChart = echarts.init(document.getElementById('b-chart'));
+                            var option1 = {
+                                title: {
+                                    text: '电压偏离度'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a','c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: d1,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: e,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option1)
+                            var vb = [];
+                            for (var i = 0; i < a.length; i++) {
+                                vb[i] = (Math.max(a[i],c[i])-Math.min(a[i],c[i]))/Math.max(a[i],c[i])
+                            }
+                            var myChart = echarts.init(document.getElementById('vb-chart'));
+                            var option2 = {
+                                title: {
+                                    text: '电压不平衡度'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['balance']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: vb,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option2)
+                            var ca1 = [];
+                            var cc1 = [];
+                            ca1 = d[6].concat(d[8]).concat(d[10])
+                            cc1 = d[7].concat(d[9]).concat(d[11])
+                            var index = ['第一天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                                '21:00', '22:00', '23:00', '第二天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                                '21:00', '22:00', '23:00', '第三天', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00',
+                                '21:00', '22:00', '23:00'];
+                            var myChart = echarts.init(document.getElementById('c-chart'));
+                            var option = {
+                                title: {
+                                    text: '电流曲线'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['a','c']
+                                },
+                                xAxis: {
+                                    data: index,
+                                    axisLabel: {
+                                        interval: 23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                series: [
+                                    {
+                                        name: 'a',
+                                        type: 'line',
+                                        data: ca1,
+                                        smooth: false
+                                    },
+                                    {
+                                        name: 'c',
+                                        type: 'line',
+                                        data: cc1,
+                                        smooth: false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var cba = [];
+                            for(var i = 0;i<ca1.length;i++){
+                                cba[i] = (Math.max(ca1[i],cc1[i])-Math.min(ca1[i],cc1[i]))/Math.max(ca1[i],cc1[i])
+                            }
+                            var myChart = echarts.init(document.getElementById('d-chart'));
+                            var option = {
+                                title:{
+                                    text:'电流不平衡度'
+                                },
+                                tooltip:{
+                                    trigger:'axis'
+                                },
+                                legend:{
+                                    data:['balance']
+                                },
+                                xAxis:{
+                                    data:index,
+                                    axisLabel:{
+                                        interval:23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                series:[
+                                    {
+                                        name:'a',
+                                        type:'line',
+                                        data:cba,
+                                        smooth:false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var bins = ecStat.histogram(cba,'scott')
+                            var myChart = echarts.init(document.getElementById('e-chart'));
+                            var option = {
+                                title:{
+                                    text:'电流不平衡度'
+                                },
+                                //color:['rgb(25,283,207)'],
+                                xAxis:{
+                                    type: 'value',
+                                    scale: true
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                series:[
+                                    {
+                                        name:'电流不平衡度',
+                                        barWidth: '99.3%',
+                                        type:'bar',
+                                        label:{
+                                            normal:{
+                                                show: true,
+                                                position: 'insideTop',
+                                                formatter: function(params){
+                                                    return params.value[1];
+                                                }
+                                            }
+                                        },
+                                        data:bins.data
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var pf = [];
+                            pf = d[15].concat(d[16]).concat(d[17])
+                            var myChart = echarts.init(document.getElementById('f-chart'));
+                            var option = {
+                                title:{
+                                    text:'功率因数曲线'
+                                },
+                                tooltip:{
+                                    trigger:'axis'
+                                },
+                                legend:{
+                                    data:['a']
+                                },
+                                xAxis:{
+                                    data:index,
+                                    axisLabel:{
+                                        interval:23
+                                    }
+                                },
+                                toolbox: {
+                                    feature: {
+                                        saveAsImage: {}
+                                    }
+                                },
+                                yAxis:{
+                                    type: 'value'
+                                },
+                                series:[
+                                    {
+                                        name:'a',
+                                        type:'line',
+                                        data:pf,
+                                        smooth:false
+                                    }
+                                ]
+                            };
+                            myChart.setOption(option)
+                            var vf = [];
+                            var t = []
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[0][j],0, d[1][j]]
+                                t.push(mm)
+                            }
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[2][j],0, d[3][j]]
+                                t.push(mm)
+                            }
+                            for (var j = 0; j < 24; j++) {
+                                var mm = [d[4][j],0,d[5][j]]
+                                t.push(mm)
+                            }
+                            vf =vf .concat(t)
+                            Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function (color) {
+                                return {
+                                    radialGradient: {
+                                        cx: 0.4,
+                                        cy: 0.3,
+                                        r: 0.5
+                                    },
+                                    stops: [
+                                        [0, color],
+                                        [1, Highcharts.Color(color).brighten(-0.2).get('rgb')]
+                                    ]
+                                };
+                            });
+                            // Set up the chart
+                            var chart = new Highcharts.Chart({
+                                chart: {
+                                    renderTo: 'container',
+                                    margin: 100,
+                                    type: 'scatter',
+                                    options3d: {
+                                        enabled: true,
+                                        alpha: 10,
+                                        beta: 30,
+                                        depth: 250,
+                                        viewDistance: 5,
+                                        frame: {
+                                            bottom: {size: 1, color: 'rgba(0,0,0,0.02)'},
+                                            back: {size: 1, color: 'rgba(0,0,0,0.04)'},
+                                            side: {size: 1, color: 'rgba(0,0,0,0.06)'}
+                                        }
+                                    }
+                                },
+                                title: {
+                                    text: '电压分布'
+                                },
+                                subtitle: {
+                                    text: '单击并拖动鼠标可旋转绘图区'
+                                },
+                                plotOptions: {
+                                    scatter: {
+                                        width: 10,
+                                        height: 10,
+                                        depth: 10
+                                    }
+                                },
+                                yAxis: {
+                                    min: 0.0,
+                                    max: 1.0
+                                },
+                                xAxis: {
+                                    min: 0.8,
+                                    max: 1.0
+                                },
+                                zAxis: {
+                                    min: 0.8,
+                                    max: 1.0
+                                },
+                                legend: {
+                                    enabled: false
+                                },
+                                series: [{
+                                    name: '随机数据',
+                                    colorByPoint: true,
+                                    data: vf
+                                }]
+                            });
+                            // Add mouse events for rotation
+                            $(chart.container).bind('mousedown.hc touchstart.hc', function (e) {
+                                e = chart.pointer.normalize(e);
+                                var posX = e.pageX,
+                                    posY = e.pageY,
+                                    alpha = chart.options.chart.options3d.alpha,
+                                    beta = chart.options.chart.options3d.beta,
+                                    newAlpha,
+                                    newBeta,
+                                    sensitivity = 5; // lower is more sensitive
+                                $(document).bind({
+                                    'mousemove.hc touchdrag.hc': function (e) {
+                                        // Run beta
+                                        newBeta = beta + (posX - e.pageX) / sensitivity;
+                                        newBeta = Math.min(100, Math.max(-100, newBeta));
+                                        chart.options.chart.options3d.beta = newBeta;
+                                        // Run alpha
+                                        newAlpha = alpha + (e.pageY - posY) / sensitivity;
+                                        newAlpha = Math.min(100, Math.max(-100, newAlpha));
+                                        chart.options.chart.options3d.alpha = newAlpha;
+                                        chart.redraw(false);
+                                    },
+                                    'mouseup touchend': function () {
+                                        $(document).unbind('.hc');
+                                    }
+                                });
+                            });
+                        }
                         },
                     beforeSend:function () {
                         var mod = $('#modal3')
@@ -459,7 +2189,7 @@
 							</h3> 
 						</div>
 						<div class="icon">
-                            <a href="#"><i class="fa fa-shopping-cart fa-5x blue" ></i></a>
+                            <a type="button" data-toggle="modal" data-target="#myModal1"><i class="fa fa-shopping-cart fa-5x blue" ></i></a>
 						</div>
 		 
                         </div>
@@ -622,16 +2352,31 @@
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div id="modal8" class="modal-dialog">
+                        <div class="modal-content">
+                            <div id="modal5" class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="myModalLabel1" >TEST</h4>
+                            </div>
+                            <div id="modal7" class="modal-body"><h3 id="testinfo">点击确定测试数据</h3></div>
+                            <div id="modal6" class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button type="button" class="btn btn-primary" onclick="myclick1()">确定</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <!-- /. PAGE WRAPPER  -->
     </div>
     <!-- /. WRAPPER  -->
     <!-- JS Scripts-->
     <script type="text/javascript">
-        $.ajax({
+    /*    $.ajax({
             crossDomain: true,
             type: 'GET',
-            url: 'http://123.206.125.42:8000/getcharts/vol',
+            url: 'http://127.0.0.1:8000/getcharts/vol',
             //async:false,
             dataType: 'JSON',
             success: function (data) {
@@ -757,7 +2502,7 @@
         $.ajax({
             crossDomain:true,
             type:'GET',
-            url:'http://123.206.125.42:8000/getcharts/voldevia',
+            url:'http://127.0.0.1:8000/getcharts/voldevia',
             dataType:'JSON',
             success:function(data){
 
@@ -884,7 +2629,7 @@
         $.ajax({
             crossDomain:true,
             type:'GET',
-            url:'http://123.206.125.42:8000/getcharts/vbalance',
+            url:'http://127.0.0.1:8000/getcharts/vbalance',
             dataType:'JSON',
             success:function(data){
                     var d = data['data']
@@ -939,7 +2684,7 @@
         $.ajax({
             crossDomain: true,
             type: 'GET',
-            url: 'http://123.206.125.42:8000/getcharts/cu',
+            url: 'http://127.0.0.1:8000/getcharts/cu',
             //async:false,
             dataType: 'JSON',
             success: function (data) {
@@ -1066,7 +2811,7 @@
         $.ajax({
             crossDomain:true,
             type:'GET',
-            url:'http://123.206.125.42:8000/getcharts/cbalance',
+            url:'http://127.0.0.1:8000/getcharts/cbalance',
             dataType:'JSON',
             success:function(data){
                 var d = data['data']
@@ -1122,7 +2867,7 @@
         $.ajax({
             crossDomain:true,
             type:'GET',
-            url:'http://123.206.125.42:8000/getcharts/cbalance',
+            url:'http://127.0.0.1:8000/getcharts/cbalance',
             dataType:'JSON',
             success:function(data){
                 var d = data['data']
@@ -1176,7 +2921,7 @@
         $.ajax({
             crossDomain: true,
             type: 'GET',
-            url: 'http://123.206.125.42:8000/getcharts/vol',
+            url: 'http://127.0.0.1:8000/getcharts/vol',
             //async:false,
             dataType: 'JSON',
             success: function (data) {
@@ -1396,7 +3141,7 @@
         $.ajax({
             crossDomain: true,
             type: 'GET',
-            url: 'http://123.206.125.42:8000/getcharts/pf',
+            url: 'http://127.0.0.1:8000/getcharts/pf',
             //async:false,
             dataType: 'JSON',
             success: function (data) {
@@ -1448,7 +3193,7 @@
             error: function (data) {
                 alert('ERROR')
             }
-        })
+        })*/
     </script>
     <!-- jQuery Js -->
     <script src="assets/js/jquery-1.10.2.js"></script>
