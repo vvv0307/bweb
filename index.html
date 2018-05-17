@@ -30,24 +30,32 @@
     <script src="assets/js/jquery.scrollTo.js"></script>
     <script src="assets/js/modernizr-2.0.6.min.js"></script>
     <script type="text/javascript">
+        function myclick3(){
+            history.go()
+        }
+        function myclick2(){
+            var mod = $('#testinfo')
+            mod.html("点击确定测试数据")
+        }
         function myclick1() {
             if(localStorage['type']=='' && localStorage['category']==''){
                 var mod = $('#testinfo')
                 mod.html(("没有数据请生成后再尝试!"))
-                setTimeout(function () {
+                /*setTimeout(function () {
                     $('#myModal1').modal('hide')
                     $('.modal-backdrop').remove()
-                    history.go()
-                },2000)
+                    /!*history.go()*!/
+                    var mod = $('#testinfo')
+                    mod.html(("点击确定测试数据"))
+                },2000)*/
             }else{
                 var ty = localStorage['type']
                 var ca = localStorage['category']
                 var na = localStorage['name']
-                alert(na)
                 $.ajax({
                     crossDomain: true,
                     type: 'POST',
-                    url: 'http://123.206.125.42:8000/submit',
+                    url: 'http://123.206.125.42:8080/submit',
                     //async:false,
                     data: {type: ty, category: ca,name: na},
                     dataType: 'JSON',
@@ -59,19 +67,19 @@
                         if(data['status']=='YES') {
                             var mod = $('#testinfo')
                             mod.html(("数据生成正确"))
-                            setTimeout(function () {
+                            /*setTimeout(function () {
                                 $('#myModal1').modal('hide')
                                 $('.modal-backdrop').remove()
                                 history.go()
-                            }, 2000)
+                            }, 2000)*/
                         }else if(data['status']=='NO'){
                             var mod = $('#testinfo')
                             mod.html(("数据生成错误"))
-                            setTimeout(function () {
+                            /*setTimeout(function () {
                                 $('#myModal1').modal('hide')
                                 $('.modal-backdrop').remove()
                                 history.go()
-                            }, 2000)
+                            }, 2000)*/
                         }
                     },
                     error:function(data){
@@ -956,22 +964,22 @@
             $.ajax({
                     crossDomain: true,
                     type: 'POST',
-                    url: 'http://123.206.125.42:8000/prodata',
+                    url: 'http://123.206.125.42:8080/prodata',
                     //async:false,
                     data: {type: t, category: c},
                     dataType: 'JSON',
                     success: function (data) {
                             var mod = $('#modal3')
                             mod.html(("<h3>完成！</h3>"))
-                            setTimeout(function () {
+                            /*setTimeout(function () {
                                 $('#myModal').modal('hide')
                                 $('.modal-backdrop').remove()
                                 history.go()
-                            },2000)
+                            },1500)*/
 
                         var d = data['data']
                         /*localStorage.clear()*/
-                        /*localStorage["data"] = JSON.stringify(d)*/
+                        localStorage["data"] = JSON.stringify(d)
                         localStorage['name'] = data['name']
                         if(d.length==24) {
                             var a = [];
@@ -2315,13 +2323,13 @@
 		</div>-->
                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div id="modal1" class="modal-dialog">
-                        <div class="modal-content">
+                        <div id="modal" class="modal-content">
                             <div id="modal2" class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <button id="button" type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                                 <h4 class="modal-title" id="myModalLabel">请选择需要生成的数据类型</h4>
                             </div>
                             <div id="modal3" class="modal-body">
-                                <div class="form-group">
+                                <div id="new" class="form-group">
                                     <label for="myModal">数据类型</label>
                                     <select id="type" class="form-control">
                                         <option>3相3线</option>
@@ -2336,17 +2344,9 @@
                                         <option>功率因数异常</option>
                                     </select>
                                 </div>
-                               <!-- <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">终止日期</h3>
-                                    </div>
-                                    <div id="enddate" class="panel-body">
-                                        <input type="text" id="edate" class="form-control">
-                                    </div>
-                                </div>-->
                             </div>
                             <div id="modal4" class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="close" type="button" class="btn btn-default" data-dismiss="modal" onclick="myclick3()">关闭</button>
                                 <button type="button" class="btn btn-primary" onclick="myclick()">确定</button>
                             </div>
                         </div>
@@ -2361,7 +2361,7 @@
                             </div>
                             <div id="modal7" class="modal-body"><h3 id="testinfo">点击确定测试数据</h3></div>
                             <div id="modal6" class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                <button id="close1" type="button" class="btn btn-default" data-dismiss="modal" onclick="myclick2()">关闭</button>
                                 <button type="button" class="btn btn-primary" onclick="myclick1()">确定</button>
                             </div>
                         </div>
